@@ -15,6 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Inicializar tema basado en las preferencias del sistema
+    const themeSwitch = document.getElementById('themeSwitch');
+    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    // Actualizar el ícono del tema
+    const updateThemeIcon = () => {
+        const icon = themeSwitch.querySelector('i');
+        icon.className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    };
+
+    // Cambiar tema
+    themeSwitch.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon();
+    });
+
     const form = document.getElementById('paymentForm');
     const paymentCurrencySelect = document.getElementById('paymentCurrency');
     const usdPaymentDiv = document.getElementById('usdPayment');

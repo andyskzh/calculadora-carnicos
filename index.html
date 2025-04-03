@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Pagos CUP/USD</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="theme-toggle">
+        <button id="themeSwitch" aria-label="Cambiar tema">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
     <div class="container">
         <h1>Calculadora de Pagos CUP/USD</h1>
         
-        <form id="paymentForm">
+        <form id="paymentForm" class="form">
             <div class="input-group">
                 <label for="exchangeRate">Tasa de cambio CUP/USD:</label>
                 <input type="number" id="exchangeRate" step="0.01" required>
@@ -43,7 +50,7 @@
                 <h3>Precios por producto</h3>
             </div>
 
-            <button type="submit">Calcular</button>
+            <button type="submit" class="submit-btn">Calcular</button>
         </form>
 
         <!-- Modal para resultados -->
@@ -55,11 +62,6 @@
             </div>
         </div>
 
-        <div id="results" class="results">
-            <h2>Resultados</h2>
-            <div id="excessAmount"></div>
-            <div id="managerProfit"></div>
-        </div>
     </div>
     <script src="script.js"></script>
 </body>
