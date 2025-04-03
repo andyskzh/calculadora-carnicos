@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Pagos CUP/USD</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Pagos CUP/USD</h1>
+        
+        <form id="paymentForm">
+            <div class="input-group">
+                <label for="exchangeRate">Tasa de cambio CUP/USD:</label>
+                <input type="number" id="exchangeRate" step="0.01" required>
+            </div>
+
+            <div class="input-group">
+                <label for="totalAmount">Monto total a pagar:</label>
+                <input type="number" id="totalAmount" step="0.01" required>
+            </div>
+
+            <div class="input-group">
+                <label for="paymentCurrency">Moneda de pago:</label>
+                <select id="paymentCurrency" required>
+                    <option value="CUP">CUP</option>
+                    <option value="USD">USD</option>
+                </select>
+            </div>
+
+            <div class="input-group" id="usdPayment" style="display: none;">
+                <label for="usdPaymentAmount">Monto a pagar en USD:</label>
+                <input type="number" id="usdPaymentAmount" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label for="productCount">Cantidad de productos:</label>
+                <input type="number" id="productCount" required>
+            </div>
+
+            <div id="productPricesContainer">
+                <h3>Precios por producto</h3>
+            </div>
+
+            <button type="submit">Calcular</button>
+        </form>
+
+        <div id="results" class="results">
+            <h2>Resultados</h2>
+            <div id="excessAmount"></div>
+            <div id="managerProfit"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
