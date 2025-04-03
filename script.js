@@ -18,9 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('paymentForm');
     const paymentCurrencySelect = document.getElementById('paymentCurrency');
     const usdPaymentDiv = document.getElementById('usdPayment');
-    const resultsDiv = document.getElementById('results');
     const productCountInput = document.getElementById('productCount');
     const productPricesContainer = document.getElementById('productPricesContainer');
+    const modal = document.getElementById('resultsModal');
+    const closeBtn = document.querySelector('.close');
+    const modalResults = document.getElementById('modalResults');
 
     // Mostrar/ocultar el campo de pago en USD según la moneda seleccionada
     paymentCurrencySelect.addEventListener('change', () => {
@@ -71,6 +73,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Función para mostrar el modal
+    const showModal = (results) => {
+        modal.style.display = 'block';
+        
+        // Crear HTML para los resultados
+        let resultsHTML = '';
+        if (results.paymentUSD) {
+            resultsHTML += `<div class="modal-results-item">${results.paymentUSD}</div>`;
+        }
+        if (results.changeCUP) {
+            resultsHTML += `<div class="modal-results-item">${results.changeCUP}</div>`;
+        }
+        resultsHTML += `<div class="modal-results-item">${results.managerProfit}</div>`;
+
+        modalResults.innerHTML = resultsHTML;
+    };
+
+    // Función para cerrar el modal
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+
+    // Evento para cerrar el modal al hacer clic en la X
+    closeBtn.onclick = closeModal;
+
+    // Evento para cerrar el modal al hacer clic fuera del modal
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -118,28 +152,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const excessUSD = CONFIG.ROUNDING_RULES.excess(preciseCalculation.subtract(usdPaymentAmount, totalInUSD));
             const excessCUP = CONFIG.ROUNDING_RULES.excess(preciseCalculation.multiply(excessUSD, exchangeRate));
             
-            results.excess = `Excedente: $${excessUSD.toFixed(2)} USD (${excessCUP.toFixed(2)} CUP)`;
-            results.totalUSD = `Monto total en USD: $${totalInUSD.toFixed(2)}`;
+            results.paymentUSD = `Pago del cliente en USD: $${totalInUSD.toFixed(2)}`;
+            results.changeCUP = `Vuelto: ${excessCUP.toFixed(2)} CUP ($${excessUSD.toFixed(2)} USD)`;
         }
 
         // Calcular ganancia del gestor
         const managerProfit = Math.abs(CONFIG.ROUNDING_RULES.profit(preciseCalculation.subtract(totalOriginal, totalAmount)));
-        results.managerProfit = `Ganancia del gestor: ${managerProfit.toFixed(2)} CUP`;
+        results.managerProfit = `Ganancia del Gestor: ${managerProfit.toFixed(2)} CUP`;
 
-        // Mostrar resultados
-        resultsDiv.style.display = 'block';
-        document.getElementById('excessAmount').innerHTML = results.excess || '';
-        document.getElementById('managerProfit').innerHTML = results.managerProfit;
-        
-        // Mostrar el monto total en USD si se paga en USD
-        if (results.totalUSD) {
-            const totalUSDElement = document.getElementById('totalUSD');
-            if (!totalUSDElement) {
-                const newDiv = document.createElement('div');
-                newDiv.id = 'totalUSD';
-                document.getElementById('results').appendChild(newDiv);
-            }
-            document.getElementById('totalUSD').innerHTML = results.totalUSD;
-        }
+        // Mostrar los resultados en el modal
+        showModal(results);
     });
 });
