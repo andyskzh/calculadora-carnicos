@@ -137,10 +137,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Si se paga en USD, validar que se haya ingresado el monto
-        if (paymentCurrency === 'USD' && isNaN(usdPaymentAmount)) {
-            alert('Por favor, ingrese el monto a pagar en USD.');
+        // Validar que la tasa de cambio sea mayor a 0
+        if (exchangeRate <= 0) {
+            alert('La tasa de cambio debe ser mayor a 0.');
             return;
+        }
+
+        // Validar que el precio original total no sea mayor al monto total
+        if (totalOriginal > totalAmount) {
+            const difference = preciseCalculation.subtract(totalOriginal, totalAmount);
+            alert(`El precio original total (${totalOriginal.toFixed(2)} CUP) no puede ser mayor que el monto total a pagar (${totalAmount.toFixed(2)} CUP). Diferencia: ${difference.toFixed(2)} CUP`);
+            return;
+        }
+
+        // Si se paga en USD, validar que se haya ingresado el monto
+        if (paymentCurrency === 'USD') {
+            if (isNaN(usdPaymentAmount)) {
+                alert('Por favor, ingrese el monto a pagar en USD.');
+                return;
+            }
+
+            // Validar que el monto en USD no sea menor que el total
+            const totalInUSD = preciseCalculation.divide(totalAmount, exchangeRate);
+            if (usdPaymentAmount < totalInUSD) {
+                const difference = preciseCalculation.subtract(totalInUSD, usdPaymentAmount);
+                alert(`El monto a pagar en USD (${usdPaymentAmount.toFixed(2)} USD) no puede ser menor que el monto total (${totalInUSD.toFixed(2)} USD). Falta: $${difference.toFixed(2)} USD`);
+                return;
+            }
         }
 
         // Calcular resultados
